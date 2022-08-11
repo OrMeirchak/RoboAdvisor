@@ -22,7 +22,7 @@
   <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
   <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
   <link href="{% static 'assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
-  <link href="{% static 'assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/survey/survey.css' %}" rel="stylesheet">
 
   <!-- Template Main CSS File -->
   <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
@@ -60,7 +60,42 @@
 
     </div>
   </header><!-- End #header -->
-
+  <!--survey start-->
+  
+  <br><br> 
+  <div id="wrapper">
+    <br>
+    <h1>Create Protofilo</h1>
+    <form id="protofilo">
+      <!--protofilo name-->
+      <h2>Protofilo Name</h2>
+      <input type="text" name="fname">
+      <br><br>
+      <!--select algorithm-->
+      <h2>Select algorithm</h2>
+      <select id="algorithm">
+        {% for algorithm in algorithms %}
+        <option value={{algorithm.id}}>{{algorithm.name}}</option>
+        {% endfor %}
+      </select>
+      <br><br>
+      <!-- Questions-->
+      {% for question in questions %}
+      <h3>{{question.text}}</h3>
+        {% for answer in question.answers %}
+        <label><input type="radio" name="q1" value={{answer.id}}>
+          {{answer.text}}
+        </label><br />
+        {% endfor %}
+        <br><br>
+      {% endfor %}
+      
+      <!-- submit-->
+      <button type="submit" id="submit" onclick="tabulateAnswers()">Create Protofilo</button>
+    <button type="reset" id="reset" onclick="resetAnswer()">Reset</button>
+    </form>
+      <!--survey end-->
+  
 
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
@@ -70,6 +105,7 @@
   <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
   <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
   <script src="assets/vendor/php-email-form/validate.js"></script>
+  <script src="{% static 'assets/vendor/survey/survey.js' %}"></script>
 
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>

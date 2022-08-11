@@ -1,14 +1,16 @@
+from asyncio.windows_events import NULL
+from hashlib import new
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from django.contrib.auth.models import User,auth
 from django.contrib import messages
+from .models import Algorithm, Answer,Question
 
 def index(request):  
     return render(request,'index.html')
 
 def home(request):
     return index(request)
-
 
 def register(request):
     if request.method=="POST":
@@ -65,7 +67,16 @@ def logout(request):
 
 def create_protfolio(request):
  if request.user.is_authenticated:
-   return render(request,'createPortfolio.html')
+   if request.method == 'GET':
+     questions=[]
+     for question in Question.objects.all():
+        questions.append({
+         "text":question.text,
+         "answers":list(Answer.objects.filter(question_id=question.id)),
+        })
+     algorithms=Algorithm.objects.all()
+     print({'questions':questions,'algorithms':algorithms})
+     return render(request,'createPortfolio.html',{'questions':questions,'algorithms':algorithms})
  else:
    return redirect('register') 
 
@@ -73,5 +84,7 @@ def protfolio_list(request):
  if request.user.is_authenticated:
    return render(request,'myProtfolios.html')
  else:
-   return redirect('register') 
+   return redirect('register')
+
+
     

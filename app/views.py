@@ -97,10 +97,10 @@ def create_protfolio(request):
      for question in Question.objects.all():
         id_values=Answer.objects.filter(question_id=question.id).aggregate(min=Min('id'),max=Max('id'))
         score+=tools._map(int(request.POST[str(question.id)]),int(id_values['min']),int(id_values['max']),1,10)
-     if score <26:
-      debug(algorithm_id,protofilo_name,"Low risk")
-     elif score >52:
-      debug(algorithm_id,protofilo_name,"High risk")
+     if score < 10*Question.objects.count()/3:
+       debug(algorithm_id,protofilo_name,"Low risk")
+     elif score > 10*Question.objects.count()/3*2:
+       debug(algorithm_id,protofilo_name,"High risk")
      else:
        debug(algorithm_id,protofilo_name,"Avarage risk")
      return redirect('protfolio_list')

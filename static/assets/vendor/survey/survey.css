@@ -10,6 +10,9 @@ body {
   h2 {
     margin: 5px 0;
   }
+  h6 {
+    color:red;
+  }
   #wrapper {
     width: 600px;
     margin: 0 auto;

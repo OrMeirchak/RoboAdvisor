@@ -61,19 +61,25 @@
     </div>
   </header><!-- End #header -->
   <!--survey start-->
-  
+  <script>
+
+  </script>
   <br><br> 
   <div id="wrapper">
     <br>
     <h1>Create Protofilo</h1>
-    <form id="protofilo">
+    <form method="POST" action="create_protfolio">
+      {% csrf_token %}
       <!--protofilo name-->
       <h2>Protofilo Name</h2>
-      <input type="text" name="fname">
+      <input type="text" name="name" required>
+      {% for message in messages %}
+      <h6 style="color:Tomato;">{{message}}</h6>
+      {% endfor %}
       <br><br>
       <!--select algorithm-->
       <h2>Select algorithm</h2>
-      <select id="algorithm">
+      <select name="algorithm">
         {% for algorithm in algorithms %}
         <option value={{algorithm.id}}>{{algorithm.name}}</option>
         {% endfor %}
@@ -83,7 +89,7 @@
       {% for question in questions %}
       <h3>{{question.text}}</h3>
         {% for answer in question.answers %}
-        <label><input type="radio" name="q1" value={{answer.id}}>
+        <label><input type="radio" name="{{answer.question_id}}" value="{{answer.id}}" required>
           {{answer.text}}
         </label><br />
         {% endfor %}

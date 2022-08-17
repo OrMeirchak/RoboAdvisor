@@ -84,7 +84,6 @@ def create_protfolio(request):
          "answers":list(Answer.objects.filter(question_id=question.id)),
         })
      algorithms=Algorithm.objects.all()
-     print({'questions':questions,'algorithms':algorithms})
      return render(request,'createPortfolio.html',{'questions':questions,'algorithms':algorithms})
 
    if request.method == 'POST':
@@ -107,6 +106,7 @@ def create_protfolio(request):
  else:
    return redirect('register') 
 
+
 def debug(algorithm,name,risk):
   print("__________debug__________")
   print("Protofile Name : "+name)
@@ -117,9 +117,19 @@ def debug(algorithm,name,risk):
 
 def protfolio_list(request):
  if request.user.is_authenticated:
-   return render(request,'myProtfolios.html')
+   if request.method == 'GET':
+     return render(request,'myProtfolios.html')
+   if request.method == 'DELETE':
+     print("delete "+request.DELETE['id'])
  else:
    return redirect('register')
+
+def articels(request):
+  if request.method == 'GET':
+    if request.GET['article_name']=='gini':
+      return render(request,'articels/gini.html')
+
+
 
 
     

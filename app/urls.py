@@ -9,4 +9,6 @@ urlpatterns=[
     path('create_protfolio',views.create_protfolio,name='create_protfolio'),
     path('protfolio_list',views.protfolio_list,name='protfolio_list'),
     path('logout',views.logout,name='logout'),
+    path('delete_orotofilo/<str:protofilo_id>/', views.protfolio_list, name='delete_protofilo'),
+    path('articels/<str:article_name>/', views.articels, name='articels')
 ]

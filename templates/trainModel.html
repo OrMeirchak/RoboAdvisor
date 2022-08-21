@@ -26,6 +26,7 @@
 
   <!-- Template Main CSS File -->
   <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
 <body>
@@ -45,7 +46,7 @@
           <li><a class="nav-link scrollto active" href="protfolio_list ">{{user.username}} Protfolios</a></li>
           <li><a class="nav-link scrollto" href="logout">Log Out</a></li>
           {% if user.username == "admin" %}
-          <li><a class="nav-link scrollto" href="train_model">Train Model</a></li>
+          <li><a class="nav-link scrollto" href="home">Train Model</a></li>
           {% endif %}
         </ul>
         <i class="bi bi-list mobile-nav-toggle"></i>
@@ -54,50 +55,40 @@
       
     </div>
   </header><!-- End #header -->
-  <div class="container">
-    <div class="card">
-      <div class="box">
-        <div class="content">
-          <h2>01</h2>
-          <h3>Protofilo Name</h3>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam pulvinar 
-             non nunc dictum commodo. Curabitur non fermentum dolor. Sed ornare.</p>
-             <form id="delete-protofilo">
+
+  <table>
+    
+    
+   {% for algorithm in algorithms %}
+    <tr>
+        <td>{{algorithm.name}}</td>
+        <td>Last Update : 1/1/1999</i></td>
+        <td>
+            <form id="train{{algorithm.id}}">
               {% csrf_token %}
-              <meta name="csrf-token" content="{{ csrf_token }}" />
-              <input type="hidden" name='protofilo_id' value="15">
-              <input type="submit" class="submit_btn btn label-success" value="Delete Protofilo" />
-              </form>
-
-              <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous"></script>
-              <script type="text/javascript">
-                let cookie = document.cookie
-                let csrfToken = cookie.substring(cookie.indexOf('=') + 1)
-                let protofilo_id='{{ protofilo_id }}'
-                $(document).on('submit','#delete-protofilo',function(e){
-                  e.preventDefault()
-                  $.ajax({
-                   type:'DELETE',
-                   data:{
-                   protofilo_id:'{{ protofilo_id }}',
-                   //protofilo_id:'{{ protofilo_id }}',
-                   //csrfmiddlewaretoken: '{{ csrf_token }}',
-                   },
-                  headers: {
-                  'X-CSRFToken': csrfToken,
-                  'X_METHODOVERRIDE': 'DELETE'
-                  },
-                   success:function(data){
-                    alert("The portfolio has been successfully deleted")
-                   }
-                  }
-                  )
-                })
-              </script>
-        </div>
-      </div>
-    </div>
-  </div>
+            <meta name="csrf-token" content="{{ csrf_token }}" />
+          {% if train_id == algorithm.id %}
+            <i class="fa fa-spinner fa-spin"></i>
+          {% endif %}
+            <input type="hidden" name="{{algorithm.id}}" id="{{algorithm.id}}" value="{{algorithm.id}}"/>
+            <input type="submit" class="submit_btn btn label-success" value="Train Model" /> 
+          </form>
+        </td>
+        <td>{{ train_id }}</td>
+        <td>{{ algorithm.id }}</td>
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous"></script>
+        <script type="text/javascript">
+          var cookie = document.cookie
+          var csrfToken = cookie.substring(cookie.indexOf('=') + 1)
+          $(document).on('submit','#train{{algorithm.id}}',function(e){
+            e.preventDefault()
+            $.ajax({
+             type:'POST',
+             data:{algorithm_id:$('#{{algorithm.id}}').val(),},
+            headers: {'X-CSRFToken': csrfToken,},})})
+        </script>
+        {% endfor %}
+      </tr>
+  </table>
 </body>
-
 </html>

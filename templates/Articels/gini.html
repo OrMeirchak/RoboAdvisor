@@ -28,5 +28,35 @@
   <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
 </head>
 <body>
+    <!-- ======= Header ======= -->
+    <header id="header" class="fixed-top d-flex align-items-center">
+      <div class="container d-flex align-items-center">
+        <div class="logo me-auto">
+          <h1><a href="/home">Robo Adviser</a></h1>
+        </div>
+        <nav id="navbar" class="navbar">
+          <ul>
+            <li><a class="nav-link scrollto" href="/home">Home</a></li>
+            <li><a class="nav-link scrollto" href="/register">Start Trade</a></li>
+            <li class="dropdown"><a href="#"><span>Articels</span> <i class="bi bi-chevron-down active"></i></a>
+              <ul>
+                <li><a href="{% url 'articels' 'gini'%}">Gini</a></li>
+                <li><a href="#">Drop Down 3</a></li>
+                <li><a href="#">Drop Down 4</a></li>
+              </ul>
+            </li>
+          </ul>
+          <i class="bi bi-list mobile-nav-toggle"></i>
+        </nav><!-- .navbar -->
+       
+      </div>
+    </header><!-- End #header -->
+    <section id="hero">
+      <div class="hero-container">
+        <iframe src="{% static 'assets/vendor/articels/mg.pdf' %}" width="100%" height="500px">
+        </iframe>
+        <a href="/register" class="btn-get-started scrollto">Get Started</a>
+      </div>
+    </section><!-- #hero -->
 </body>
 </html>

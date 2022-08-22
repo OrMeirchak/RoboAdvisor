@@ -5,9 +5,11 @@ from django.db.models import Max,Min
 from django.http import QueryDict
 from django.contrib.auth.models import User,auth
 from django.contrib import messages
-from .models import Algorithm, Answer,Question
+from .models import Algorithm, Algotrade_index, Algotrade_type, Answer,Question
 from . import tools
 from django.http import QueryDict
+from django.http import JsonResponse
+from django.template.loader import render_to_string
 
 def index(request):  
     return render(request,'index.html')
@@ -134,16 +136,36 @@ def articels(request,article_name):
 
 def train_model(request):
   if request.user.is_authenticated and request.user.username == 'admin':
-    if request.method == 'GET':
-      algorithms=Algorithm.objects.all()
-      return render(request,'trainModel.html',{'algorithms':algorithms})
+    algorithms=Algorithm.objects.all()
     if request.method == 'POST':
       algorithm_id=request.POST['algorithm_id']
-      print("train model id : "+algorithm_id)
-      algorithms=Algorithm.objects.all()
-      return render(request,'trainModel.html',{'algorithms':algorithms,'train_id':algorithm_id})
+      print("train model id : "+algorithm_id)#Debug
+    return render(request,'trainModel.html',{'algorithms':algorithms})
   else:
     return redirect('home')
+
+def algotrade(request):
+  if request.user.is_authenticated:
+    algotrade_indices=Algotrade_index.objects.all()
+    algotrade_types=Algotrade_type.objects.all()
+    if request.method == 'GET':
+      return render(request,'algotrade.html',{'algotrade_indices':algotrade_indices,'algotrade_types':algotrade_types})
+    if request.method == 'POST':
+      index_id=request.POST['index']
+      symbol=Algotrade_index.objects.get(pk=int(index_id))
+      symbol=symbol.symbol
+      type_id=request.POST['type']
+      type=Algotrade_type.objects.get(pk=type_id)
+      type=type.name
+      cur_price=100
+      exp_price=50
+      return render(request,'algotrade.html',{'algotrade_indices':algotrade_indices,'algotrade_types':algotrade_types,'cur_price':cur_price,'exp_price':exp_price,'type':type,'symbol':symbol})
+  else:
+    return redirect('register')
+
+
+
+  
 
 
 

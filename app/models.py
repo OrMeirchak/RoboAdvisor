@@ -11,3 +11,9 @@ class Answer(models.Model):
 class Algorithm(models.Model):
    name=models.CharField(max_length=50)
 
+class Algotrade_type(models.Model):
+   name=models.CharField(max_length=50)
+
+class Algotrade_index(models.Model):
+   symbol=models.CharField(max_length=50)
+

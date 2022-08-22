@@ -10,5 +10,6 @@ urlpatterns=[
     path('protfolio_list',views.protfolio_list,name='protfolio_list'),
     path('logout',views.logout,name='logout'),
     path('train_model',views.train_model,name='train_model'),
+    path('algotrade',views.algotrade,name='algotrade'),
     path('articels/<str:article_name>/', views.articels, name='articels')
 ]

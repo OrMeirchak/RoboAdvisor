@@ -15,14 +15,13 @@
   <link href="{% static 'assets/img/favicon.png' %}" rel="icon">
   <link href="{% static 'assets/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
 
-  <!-- Google Fonts -->
-
   <!-- Vendor CSS Files -->
   <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
   <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
   <link href="{% static 'assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
   <link href="{% static 'assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
   <link href="{% static 'assets/vendor/protofilocard/card.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/train-model/train-model.css' %}" rel="stylesheet">
 
   <!-- Template Main CSS File -->
   <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
@@ -43,22 +42,19 @@
         <ul>
           <li><a class="nav-link scrollto" href="home">Home</a></li>
           <li><a class="nav-link scrollto" href="create_protfolio ">Create Protfolio</a></li>
-          <li><a class="nav-link scrollto active" href="protfolio_list ">{{user.username}} Protfolios</a></li>
+          <li><a class="nav-link scrollto" href="protfolio_list ">{{user.username}} Protfolios</a></li>
           <li><a class="nav-link scrollto" href="logout">Log Out</a></li>
+          <li><a class="nav-link scrollto" href="algotrade">AlgoTrade</a></li>
           {% if user.username == "admin" %}
-          <li><a class="nav-link scrollto" href="home">Train Model</a></li>
+          <li><a class="nav-link scrollto active" href="train_model">Train Model</a></li>
           {% endif %}
         </ul>
         <i class="bi bi-list mobile-nav-toggle"></i>
       </nav><!-- .navbar -->
-
-      
     </div>
   </header><!-- End #header -->
 
   <table>
-    
-    
    {% for algorithm in algorithms %}
     <tr>
         <td>{{algorithm.name}}</td>
@@ -67,15 +63,13 @@
             <form id="train{{algorithm.id}}">
               {% csrf_token %}
             <meta name="csrf-token" content="{{ csrf_token }}" />
-          {% if train_id == algorithm.id %}
-            <i class="fa fa-spinner fa-spin"></i>
-          {% endif %}
             <input type="hidden" name="{{algorithm.id}}" id="{{algorithm.id}}" value="{{algorithm.id}}"/>
             <input type="submit" class="submit_btn btn label-success" value="Train Model" /> 
+            {% if algorithm.id == 2 %}
+            <i class="fa fa-spinner fa-spin"></i>
+          {% endif %}
           </form>
         </td>
-        <td>{{ train_id }}</td>
-        <td>{{ algorithm.id }}</td>
         <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous"></script>
         <script type="text/javascript">
           var cookie = document.cookie
@@ -85,10 +79,11 @@
             $.ajax({
              type:'POST',
              data:{algorithm_id:$('#{{algorithm.id}}').val(),},
-            headers: {'X-CSRFToken': csrfToken,},})})
+             headers: {'X-CSRFToken': csrfToken,},
+             success: function(response){} })})   
         </script>
+        </tr>
         {% endfor %}
-      </tr>
   </table>
 </body>
 </html>

@@ -44,6 +44,7 @@
           <li><a class="nav-link scrollto" href="create_protfolio ">Create Protfolio</a></li>
           <li><a class="nav-link scrollto active" href="protfolio_list ">{{user.username}} Protfolios</a></li>
           <li><a class="nav-link scrollto" href="logout">Log Out</a></li>
+          <li><a class="nav-link scrollto" href="algotrade">AlgoTrade</a></li>
           {% if user.username == "admin" %}
           <li><a class="nav-link scrollto" href="train_model">Train Model</a></li>
           {% endif %}
@@ -62,13 +63,12 @@
           <h3>Protofilo Name</h3>
           <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam pulvinar 
              non nunc dictum commodo. Curabitur non fermentum dolor. Sed ornare.</p>
-             <form id="delete-protofilo">
+             <form id="deleteProtofilo{{ protofilo_id }}">
               {% csrf_token %}
               <meta name="csrf-token" content="{{ csrf_token }}" />
               <input type="hidden" name='protofilo_id' value="15">
               <input type="submit" class="submit_btn btn label-success" value="Delete Protofilo" />
               </form>
-
               <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous"></script>
               <script type="text/javascript">
                 let cookie = document.cookie

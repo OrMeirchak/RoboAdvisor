@@ -36,9 +36,10 @@
       <nav id="navbar" class="navbar">
         <ul>
           <li><a class="nav-link scrollto" href="home">Home</a></li>
-          <li><a class="nav-link scrollto active" href="create_protfolio">Create Protfolio</a></li>
+          <li><a class="nav-link scrollto" href="create_protfolio">Create Protfolio</a></li>
           <li><a class="nav-link scrollto" href="protfolio_list">{{user.username}} Protfolios</a></li>
           <li><a class="nav-link scrollto" href="logout">Log Out</a></li>
+          <li><a class="nav-link scrollto active" href="algotrade">AlgoTrade</a></li>
           {% if user.username == "admin" %}
           <li><a class="nav-link scrollto" href="train_model">Train Model</a></li>
           {% endif %}

@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>My protofilos</title>
+  <title>Admin panel</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -20,7 +20,7 @@
   <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
   <link href="{% static 'assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
   <link href="{% static 'assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
-  <link href="{% static 'assets/vendor/protofilocard/card.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/portfoliocard/card.css' %}" rel="stylesheet">
   <link href="{% static 'assets/vendor/train-model/train-model.css' %}" rel="stylesheet">
 
   <!-- Template Main CSS File -->
@@ -41,8 +41,8 @@
       <nav id="navbar" class="navbar">
         <ul>
           <li><a class="nav-link scrollto" href="home">Home</a></li>
-          <li><a class="nav-link scrollto" href="create_protfolio ">Create Protfolio</a></li>
-          <li><a class="nav-link scrollto" href="protfolio_list ">{{user.username}} Protfolios</a></li>
+          <li><a class="nav-link scrollto" href="create_portfolio ">Create portfolio</a></li>
+          <li><a class="nav-link scrollto" href="portfolio_list ">{{user.username}} Portfolios</a></li>
           <li><a class="nav-link scrollto" href="algotrade">AlgoTrade</a></li>
           <li><a class="nav-link scrollto" href="logout">Log Out</a></li>
           {% if user.username == "admin" %}

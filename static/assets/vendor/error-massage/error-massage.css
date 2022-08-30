@@ -1,0 +1,40 @@
+.error_msg_003, .success_msg_003, .info_msg_003, .warning_msg_003{
+    width: 500px;
+    height: auto;
+    margin: 0px;
+    padding: 2px 4px;
+    font: bold 13px Arial,sans-serif;
+    padding: 7px 0px 5px 5px;
+    -moz-border-radius: 6px 6px 6px 6px;
+    }
+   
+   .error_msg_003{
+    border:solid 1px #FBD3C6;
+    background:#FDE4E1;
+    color: #B10009;
+    }
+   
+   .success_msg_003{
+    border: solid 1px #ADDE5C;
+    background: #DFF2BF;
+    color: #008000;
+    }
+   
+   .info_msg_003{
+    border:solid 1px #46B6EC;
+    background:#BDE5F8;
+    color: #00529B;
+    }
+   
+   .warning_msg_003{
+    border:solid 1px #FDDD5B;
+    background:#FEEFB3;
+    color: #9F6000;
+    }
+   
+   .msg_003_image{
+    width: 16px;
+    height: 16px;
+    float: left;
+    margin: 0px 7px;
+    }

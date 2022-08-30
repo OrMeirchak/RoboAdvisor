@@ -1,0 +1,109 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>{{name}}</title>
+  <!-- Favicons -->
+  <link href="{% static 'assets/img/favicon.png' %}" rel="icon">
+  <link href="{% static 'assets/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/survey/survey.css' %}" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'assets/vendor/portfolio/alert-box.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"/>
+
+  <!-- Template Main CSS File -->
+  <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
+</head>
+
+<body>
+  <!-- ======= Header ======= -->
+  <header id="header" class="fixed-top d-flex align-items-center">
+    <div class="container d-flex align-items-center">
+
+      <div class="logo me-auto">
+        <h1><a href="/home">Robo Adviser</a></h1>
+      </div>
+
+      <nav id="navbar" class="navbar">
+        <ul>
+          <li><a class="nav-link scrollto" href="/home">Home</a></li>
+          <li><a class="nav-link scrollto" href="/create_portfolio">Create Portfolio</a></li>
+          <li><a class="nav-link scrollto active" href="/portfolio_list">{{user.username}} Portfolio</a></li>
+          <li><a class="nav-link scrollto" href="/algotrade">AlgoTrade</a></li>
+          <li><a class="nav-link scrollto" href="/logout">Log Out</a></li>
+          {% if user.username == "admin" %}
+          <li><a class="nav-link scrollto" href="/train_model">Train Model</a></li>
+          {% endif %}
+        </ul>
+        </ul>
+        <i class="bi bi-list mobile-nav-toggle"></i>
+      </nav><!-- .navbar -->
+
+    </div>
+  </header><!-- End #header -->
+
+  <br><br> 
+  <br><br> 
+  <div id="wrapper">
+    <h3>Portfolio Name : {{name}}</h3>
+    <h3>Algorithm : {{algorithm}}</h3>
+    {% if risk == 0 %}
+    <h3 style="color:green">Risk : Low</h3>
+    {% elif risk == 1 %}
+    <h3 style="color:yellow">Risk : Avarage</h3>
+    {% elif risk == 2 %}
+    <h3 style="color:red">Risk : High</h3>
+    {% endif %}
+    <h3>Creation Date : {{creation_date}}</h3>
+
+    <div class="container">
+      <input type="checkbox" id="check">
+      <label class="show_button" for="check">Delete Portfolio</label>
+      <div class="background"></div>
+      <div class="alert_box">
+        <div class="icon">
+          <i class="fas fa-exclamation"></i>
+        </div>
+        <header>Confirm</header>
+        <p>Are you sure want to permanently delete {{name}}?</p>
+        <div class="btns">
+          <form id="delete-portfolio">
+            {% csrf_token %}
+          <meta name="csrf-token" content="{{ csrf_token }}" />
+          <input type="hidden" name="portfolio_id" value="{{portfolio_id}}"/>
+          <!--<input type="submit" class="submit_btn btn label-success"/> -->
+          <input type="submit" class="submit_btn btn label-success" value="Delete"/>
+        </form>
+          <label for="check">Cancel</label>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT" crossorigin="anonymous"></script>
+<script type="text/javascript">
+  var cookie = document.cookie
+  var csrfToken = cookie.substring(cookie.indexOf('=') + 1)
+  $(document).on('submit','#delete-portfolio',function(e){
+    e.preventDefault()
+    $.ajax({
+     type:'DELETE',
+     data:{portfolio_id:'{{portfolio_id}}'},
+     headers: {'X-CSRFToken': csrfToken,},
+     success: function(response){
+      alert('{{name}} has been successfully deleted')
+      window.location.href = '../../portfolio_list';
+     } })})   
+</script>
+</html>

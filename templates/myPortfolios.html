@@ -1,0 +1,88 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>My portfolios</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="{% static 'assets/img/favicon.png' %}" rel="icon">
+  <link href="{% static 'assets/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/portfoliocard/card.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/myportfolios/mypotyfolios.css' %}" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
+</head>
+
+<body>
+
+  <!-- ======= Header ======= -->
+  <header id="header" class="fixed-top d-flex align-items-center">
+    <div class="container d-flex align-items-center">
+
+      <div class="logo me-auto">
+        <h1><a href="home">Robo Adviser</a></h1>
+      </div>
+
+      <nav id="navbar" class="navbar">
+        <ul>
+          <li><a class="nav-link scrollto" href="home">Home</a></li>
+          <li><a class="nav-link scrollto" href="create_portfolio ">Create Portfolio</a></li>
+          <li><a class="nav-link scrollto active" href="portfolio_list ">{{user.username}} Portfolio</a></li>
+          <li><a class="nav-link scrollto" href="algotrade">AlgoTrade</a></li>
+          <li><a class="nav-link scrollto" href="logout">Log Out</a></li>
+          {% if user.username == "admin" %}
+          <li><a class="nav-link scrollto" href="train_model">Train Model</a></li>
+          {% endif %}
+        </ul>
+        <i class="bi bi-list mobile-nav-toggle"></i>
+      </nav><!-- .navbar -->
+    </div>
+  </header><!-- End #header -->
+  <!DOCTYPE html>
+    <title>Pure CSS Timeline Design With Cool Hover Effects</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+  
+    <div class="timeline">
+      <ul>
+        {% for portfolio in portfolios %}
+        <li>
+          <span>{{portfolio.creation_date}}</span>
+          <div class="content" onclick="portfolio_on_click('{{portfolio.id}}')">
+            <h3>{{portfolio.name}}</h3>
+            <P>{{portfolio.algorithm}} algorithm</P>
+            {% if portfolio.risk == 0 %}
+            <p style="color:green">Risk : Low</p>
+            {% elif portfolio.risk == 1 %}
+            <p style="color:yellow">Risk : Avarage</p>
+            {% elif portfolio.risk == 2 %}
+            <p style="color:red">Risk : High</p>
+            {% endif %}
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    <script>
+      function portfolio_on_click(portfolio_id) {
+        window.location.href = '../portfolio/'+portfolio_id+'/';;
+      }
+      </script>
+</body>
+</html>

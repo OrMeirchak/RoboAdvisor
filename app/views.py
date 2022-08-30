@@ -1,12 +1,15 @@
 from asyncio.windows_events import NULL
+import base64
+from io import BytesIO
+from multiprocessing import connection
 from hashlib import new
 from django.shortcuts import render,redirect
 from django.db.models import Max,Min
 from django.http import QueryDict
 from django.contrib.auth.models import User,auth
 from django.contrib import messages
-from .models import Algorithm, Algotrade_index, Algotrade_type, Answer,Question
-from . import tools
+from .models import Algorithm,Algotrade_index,Algotrade_type,Answer,Question,Portfolio
+from . import tools,algorithm_api
 from django.http import QueryDict
 from django.http import JsonResponse
 from django.template.loader import render_to_string
@@ -41,13 +44,13 @@ def register(request):
             user=User.objects.create_user(username=username,email=email,password=password1)
             user.save()
             auth.login(request,user)
-            return redirect('create_protfolio')
+            return redirect('create_portfolio')
      else:
         messages.info(request,'Password Not The Same')
         return redirect('register')
     else:
      if request.user.is_authenticated:
-      return redirect('create_protfolio')
+      return redirect('create_portfolio')
      else:
       return render(request,'register.html')
 
@@ -58,14 +61,14 @@ def login(request):
     user=auth.authenticate(username=username,password=password)
     if user is not None:
       auth.login(request,user)
-      return redirect('create_protfolio')
+      return redirect('create_portfolio')
     else:
       messages.info(request,'Credentials Invalid')
       return redirect('login')
       
  if request.method == 'GET':
     if request.user.is_authenticated:
-      return redirect('create_protfolio')
+      return redirect('create_portfolio')
     else:
       return render(request,'login.html')
 
@@ -73,7 +76,7 @@ def logout(request):
     auth.logout(request)
     return redirect('login')
 
-def create_protfolio(request):
+def create_portfolio(request):
  if request.user.is_authenticated:
    if request.method == 'GET':
      questions=[]
@@ -87,10 +90,10 @@ def create_protfolio(request):
 
    if request.method == 'POST':
      user_name=request.user.username
-     protofilo_name=request.POST['name']
-     if protofilo_name=="yossi":
-        messages.info(request,'Protofilo Name Already used')
-        return redirect('create_protfolio')
+     portfolio_name=request.POST['name']
+     if Portfolio.objects.filter(name=portfolio_name,user_id=request.user.id):
+        messages.info(request,'Portfolio Name Already used')
+        return redirect('create_portfolio')
      algorithm_id=request.POST['algorithm']
      score=0
      for question in Question.objects.all():
@@ -98,36 +101,58 @@ def create_protfolio(request):
         score+=tools._map(int(request.POST[str(question.id)]),int(id_values['min']),int(id_values['max']),1,10)
      score=tools._map(score,10,10*Question.objects.count(),10,100)
      if score < 30:
-       debug(user_name,algorithm_id,protofilo_name,score,"Low risk")
+       debug(user_name,algorithm_id,portfolio_name,score,"Low risk")#debug
+       portfolio=Portfolio.objects.create(name=portfolio_name,risk=0,algorithm_id=algorithm_id,user_id=request.user.id)
      elif score > 70:
-       debug(user_name,algorithm_id,protofilo_name,score,"High risk")
+       debug(user_name,algorithm_id,portfolio_name,score,"High risk")#debug
+       portfolio=Portfolio.objects.create(name=portfolio_name,risk=2,algorithm_id=algorithm_id,user_id=request.user.id)
      else:
-       debug(user_name,algorithm_id,protofilo_name,score,"Avarage risk")
-     return redirect('protfolio_list')
+       debug(user_name,algorithm_id,portfolio_name,score,"Avarage risk")#debug
+       portfolio=Portfolio.objects.create(name=portfolio_name,risk=1,algorithm_id=algorithm_id,user_id=request.user.id)
+     portfolio.save()
+     return redirect('portfolio_list')
  else:
    return redirect('register') 
 
-
-def debug(user_name,algorithm,name,score,risk):
-  print("__________debug__________")
-  print("User Name : "+user_name)
-  print("Protofile Name : "+name)
-  print("Algorithm ID : "+algorithm)
-  print("Score : "+str(score))
-  print(risk)
-  print("__________debug__________")
-
-
-def protfolio_list(request):
+def portfolio_list(request):
  if request.user.is_authenticated:
    if request.method == 'GET':
-     return render(request,'myProtfolios.html',{'protofilo_id':7})
-   if request.method == 'DELETE':
-    protofilo_id = QueryDict(request.body).get('protofilo_id')
-    print("Protofilo "+protofilo_id+ " deleted")#Debug
-    return render(request,'myProtfolios.html')
+     portfolios=[]
+     for portfolio in Portfolio.objects.all():
+       portfolios.append({
+          'name':portfolio.name,
+          'algorithm':Algorithm.objects.get(pk=portfolio.algorithm_id).name,
+          'risk':portfolio.risk,
+          'creation_date':portfolio.creation_date,
+          'id':portfolio.id
+           })
+     return render(request,'myportfolios.html',{'portfolios':portfolios})
  else:
    return redirect('register')
+
+def portfolio(request,portfolio):
+  if request.user.is_authenticated:
+    if request.method == 'GET':
+      try:
+        portfolio=Portfolio.objects.get(pk=portfolio)
+        if portfolio.user_id==request.user.id:
+          return render(request,'portfolio.html',{
+          'name':portfolio.name,
+          'algorithm':Algorithm.objects.get(pk=portfolio.algorithm_id).name,
+          'risk':portfolio.risk,
+          'creation_date':portfolio.creation_date.strftime("%d-%m-%Y | %H:%M"),
+          'portfolio_id':portfolio.id
+           })
+      except Portfolio.DoesNotExist:
+        return redirect('/home')
+    if request.method == 'DELETE':
+      portfolio_id = QueryDict(request.body).get('portfolio_id')
+      print("portfolio "+portfolio_id+ " deleted")#Debug
+      portfolio=Portfolio.objects.get(pk=portfolio_id)
+      if portfolio.user_id==request.user.id:
+        portfolio.delete() 
+      return render(request,'myPortfolios.html')
+  return redirect('/home')
 
 def articels(request,article_name):
   if request.method == 'GET':
@@ -140,30 +165,41 @@ def train_model(request):
     if request.method == 'POST':
       algorithm_id=request.POST['algorithm_id']
       print("train model id : "+algorithm_id)#Debug
-    return render(request,'trainModel.html',{'algorithms':algorithms})
+      #df=algorithm_api.train_model()
+      #protofilo=Gini_protofilo.objects.create(df=df)
+      #protofilo.save()
+      return render(request,'trainModel.html',{'algorithms':algorithms})
+    if request.method == 'GET':
+      return render(request,'trainModel.html',{'algorithms':algorithms})
   else:
     return redirect('home')
 
+def develop(request):
+  json=Gini_protofilo.objects.get(pk=3).df
+  df=tools.json_to_df(json)
+  plt=tools.df_to_plt_gini(df)
+  return render(request,'develop.html')
+
 def algotrade(request):
   if request.user.is_authenticated:
-    algotrade_indices=Algotrade_index.objects.all()
-    algotrade_types=Algotrade_type.objects.all()
     if request.method == 'GET':
-      return render(request,'algotrade.html',{'algotrade_indices':algotrade_indices,'algotrade_types':algotrade_types})
+      return render(request,'algotrade.html',{'algotrade_indices':Algotrade_index.objects.all(),'algotrade_types':Algotrade_type.objects.all()})
     if request.method == 'POST':
-      index_id=request.POST['index']
-      symbol=Algotrade_index.objects.get(pk=int(index_id))
-      symbol=symbol.symbol
-      type_id=request.POST['type']
-      type=Algotrade_type.objects.get(pk=type_id)
-      type=type.name
-      cur_price=100
-      exp_price=50
-      return render(request,'algotrade.html',{'algotrade_indices':algotrade_indices,'algotrade_types':algotrade_types,'cur_price':cur_price,'exp_price':exp_price,'type':type,'symbol':symbol})
+      response=algorithm_api.algotrade(Algotrade_type.objects.get(pk=request.POST['type']).name,Algotrade_index.objects.get(pk=int(request.POST['index'])).symbol)
+      cur_price=response['cur_price']
+      exp_price=response['exp_price']
+      return render(request,'algotrade.html',{'algotrade_indices':Algotrade_index.objects.all(),'algotrade_types':Algotrade_type.objects.all(),'cur_price':cur_price,'exp_price':exp_price,'type':Algotrade_type.objects.get(pk=request.POST['type']).name,'symbol':Algotrade_index.objects.get(pk=int(request.POST['index'])).symbol})
   else:
     return redirect('register')
 
-
+def debug(user_name,algorithm,name,score,risk):
+  print("__________debug__________")
+  print("User Name : "+user_name)
+  print("Portfolio Name : "+name)
+  print("Algorithm ID : "+algorithm)
+  print("Score : "+str(score))
+  print(risk)
+  print("__________debug__________")
 
   
 

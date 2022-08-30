@@ -18,6 +18,7 @@
   <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
   <link href="{% static 'assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
   <link href="{% static 'assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/error-massage/error-massage.css' %}" rel="stylesheet">
 
   <!-- Template Main CSS File -->
   <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
@@ -54,6 +55,10 @@
   <!-- ======= Hero Section ======= -->
   <section id="hero">
     <div class="hero-container">
+      <img src="{% static 'assets/img/mta.jpg' %}" alt="">
+      <i class='fas fa-exclamation-triangle' style='font-size:48px;color:red'></i>
+      <p class="warning_msg_003">Fuck hapoel</p>
+      <br>
       {% if user.is_authenticated %}
       <h1>Hey {{user.username}},Welcome back to Robo adviser</h1>
       {% else %}
@@ -216,6 +221,7 @@
   <script src="{% static 'assets/vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
   <script src="{% static 'assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
   <script src="{% static 'assets/vendor/php-email-form/validate.js' %}"></script>
+  <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
 
   <!-- Template Main JS File -->
   <script src="{% static 'assets/js/main.js' %}"></script>

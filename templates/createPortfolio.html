@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Create protofilo</title>
+  <title>Create portfolio</title>
   <!-- Favicons -->
   <link href="{% static 'assets/img/favicon.png' %}" rel="icon">
   <link href="{% static 'assets/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
@@ -36,8 +36,8 @@
       <nav id="navbar" class="navbar">
         <ul>
           <li><a class="nav-link scrollto" href="home">Home</a></li>
-          <li><a class="nav-link scrollto active" href="create_protfolio">Create Protfolio</a></li>
-          <li><a class="nav-link scrollto" href="protfolio_list">{{user.username}} Protfolios</a></li>
+          <li><a class="nav-link scrollto active" href="create_portfolio">Create Portfolio</a></li>
+          <li><a class="nav-link scrollto" href="portfolio_list">{{user.username}} Portfolio</a></li>
           <li><a class="nav-link scrollto" href="algotrade">AlgoTrade</a></li>
           <li><a class="nav-link scrollto" href="logout">Log Out</a></li>
           {% if user.username == "admin" %}
@@ -55,11 +55,11 @@
   <br><br> 
   <div id="wrapper">
     <br>
-    <h1>Create Protofilo</h1>
-    <form method="POST" action="create_protfolio">
+    <h1>Create Portfolio</h1>
+    <form method="POST" action="create_portfolio">
       {% csrf_token %}
       <!--protofilo name-->
-      <h2>Protofilo Name</h2>
+      <h2>Portfolio Name</h2>
       <input type="text" name="name" required>
       {% for message in messages %}
       <h6 style="color:Tomato;">{{message}}</h6>
@@ -85,7 +85,7 @@
       {% endfor %}
       
       <!-- submit-->
-      <button type="submit" id="submit" onclick="tabulateAnswers()">Create Protofilo</button>
+      <button type="submit" id="submit" onclick="tabulateAnswers()">Create Portfolio</button>
     <button type="reset" id="reset" onclick="resetAnswer()">Reset</button>
     </form>
       <!--survey end-->

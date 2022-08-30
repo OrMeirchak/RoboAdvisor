@@ -110,7 +110,7 @@ def create_portfolio(request):
        debug(user_name,algorithm_id,portfolio_name,score,"Avarage risk")#debug
        portfolio=Portfolio.objects.create(name=portfolio_name,risk=1,algorithm_id=algorithm_id,user_id=request.user.id)
      portfolio.save()
-     return redirect('portfolio_list')
+     return redirect('portfolio'+'/'+str(portfolio.id))
  else:
    return redirect('register') 
 

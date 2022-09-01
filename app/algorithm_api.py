@@ -6,6 +6,9 @@ import matplotlib.pyplot as plt
 import base64
 from io import BytesIO
 import matplotlib.pyplot as plt
+import time
+
+from app.models import Train_model
 
 
 if sys.version_info[0] < 3: 
@@ -21,8 +24,16 @@ def algotrade(machine_learning_type:str,stock:str):
   "STOCK": stock} 
   response = requests.post(BASR_URL+'/algotrade-options', params=parameters)
   return response.json()
-   
-def train_model():
+
+def train_model(algorithm_id,train_model_id):
+  print("Start train "+algorithm_id)
+  time.sleep(10)
+  print("Finish train "+algorithm_id)
+  train_model=Train_model.objects.get(pk=train_model_id)
+  train_model.finish=True
+  train_model.save()
+
+def train_modelx():
   parameters = {
   "V": 1.5} 
   response = requests.post(BASR_URL+'/robo-advisor/gini', params=parameters)

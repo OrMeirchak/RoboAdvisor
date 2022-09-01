@@ -26,6 +26,11 @@ class Portfolio(models.Model):
    user_id=models.IntegerField()
    creation_date=models.DateTimeField(default=datetime.now,blank=True)
 
+class Train_model(models.Model):
+   algorithm_id=models.IntegerField()
+   creation_date=models.DateTimeField(default=datetime.now,blank=True)
+   finish=models.BooleanField(default=False)
+
 
 
    

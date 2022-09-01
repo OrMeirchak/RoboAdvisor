@@ -58,14 +58,14 @@
    {% for algorithm in algorithms %}
     <tr>
         <td>{{algorithm.name}}</td>
-        <td>Last Update : 1/1/1999</i></td>
+        <td>Last Update : {{algorithm.last_update}}</i></td>
         <td>
             <form id="train{{algorithm.id}}">
               {% csrf_token %}
             <meta name="csrf-token" content="{{ csrf_token }}" />
             <input type="hidden" name="{{algorithm.id}}" id="{{algorithm.id}}" value="{{algorithm.id}}"/>
             <input type="submit" class="submit_btn btn label-success" value="Train Model" /> 
-            {% if algorithm.id == 2 %}
+            {% if algorithm.trainig_now == 1 %}
             <i class="fa fa-spinner fa-spin"></i>
           {% endif %}
           </form>
@@ -80,7 +80,7 @@
              type:'POST',
              data:{algorithm_id:$('#{{algorithm.id}}').val(),},
              headers: {'X-CSRFToken': csrfToken,},
-             success: function(response){} })})   
+             success: function(response){location.reload();} })})   
         </script>
         </tr>
         {% endfor %}

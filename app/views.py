@@ -8,11 +8,12 @@ from django.db.models import Max,Min
 from django.http import QueryDict
 from django.contrib.auth.models import User,auth
 from django.contrib import messages
-from .models import Algorithm,Algotrade_index,Algotrade_type,Answer,Question,Portfolio
+from .models import Algorithm,Algotrade_index,Algotrade_type,Answer,Question,Portfolio, Train_model
 from . import tools,algorithm_api
 from django.http import QueryDict
 from django.http import JsonResponse
 from django.template.loader import render_to_string
+import threading
 
 def index(request):  
     return render(request,'index.html')
@@ -161,15 +162,44 @@ def articels(request,article_name):
 
 def train_model(request):
   if request.user.is_authenticated and request.user.username == 'admin':
-    algorithms=Algorithm.objects.all()
+    #algorithms=Algorithm.objects.all()
     if request.method == 'POST':
       algorithm_id=request.POST['algorithm_id']
       print("train model id : "+algorithm_id)#Debug
+      train=Train_model.objects.create(algorithm_id=algorithm_id)
+      t = threading.Thread(target=algorithm_api.train_model,args=[train.algorithm_id,train.id])
+      t.setDaemon(True)
+      t.start()
       #df=algorithm_api.train_model()
       #protofilo=Gini_protofilo.objects.create(df=df)
       #protofilo.save()
-      return render(request,'trainModel.html',{'algorithms':algorithms})
+      #return render(request,'trainModel.html',{'algorithms':algorithms})
+      print("Finish View Method")#Debu
+      return redirect('train_model')
     if request.method == 'GET':
+      algorithms=[]
+      for algorithm in Algorithm.objects.all():
+        if Train_model.objects.filter(algorithm_id=algorithm.id).exists():
+          latest_train= Train_model.objects.filter(algorithm_id=algorithm.id).latest('creation_date')
+          if latest_train.finish==True:
+            last_update=latest_train.creation_date
+            training_now=0
+          elif Train_model.objects.filter(algorithm_id=algorithm.id,finish=False).exists():
+             last_update=Train_model.objects.filter(algorithm_id=algorithm.id,finish=False).latest('creation_date').creation_date
+             training_now=1
+          else:
+            last_update="The model is not trained"
+            training_now=1
+        else:
+          last_update="The model is not trained"
+          training_now=0
+        algorithms.append({
+          'id':algorithm.id,
+          'name':algorithm.name,
+          'last_update':last_update,
+          'trainig_now':training_now
+        })
+
       return render(request,'trainModel.html',{'algorithms':algorithms})
   else:
     return redirect('home')

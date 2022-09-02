@@ -119,7 +119,7 @@ def portfolio_list(request):
  if request.user.is_authenticated:
    if request.method == 'GET':
      portfolios=[]
-     for portfolio in Portfolio.objects.all():
+     for portfolio in Portfolio.objects.filter(user_id=request.user.id):
        portfolios.append({
           'name':portfolio.name,
           'algorithm':Algorithm.objects.get(pk=portfolio.algorithm_id).name,
@@ -184,8 +184,8 @@ def train_model(request):
           if latest_train.finish==True:
             last_update=latest_train.creation_date
             training_now=0
-          elif Train_model.objects.filter(algorithm_id=algorithm.id,finish=False).exists():
-             last_update=Train_model.objects.filter(algorithm_id=algorithm.id,finish=False).latest('creation_date').creation_date
+          elif Train_model.objects.filter(algorithm_id=algorithm.id,finish=True).exists():
+             last_update=Train_model.objects.filter(algorithm_id=algorithm.id,finish=True).latest('creation_date').creation_date
              training_now=1
           else:
             last_update="The model is not trained"

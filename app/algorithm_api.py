@@ -26,9 +26,9 @@ def algotrade(machine_learning_type:str,stock:str):
   return response.json()
 
 def train_model(algorithm_id,train_model_id):
-  print("Start train "+algorithm_id)
+  print("Start train "+algorithm_id)#debug
   time.sleep(10)
-  print("Finish train "+algorithm_id)
+  print("Finish train "+algorithm_id)#debug
   train_model=Train_model.objects.get(pk=train_model_id)
   train_model.finish=True
   train_model.save()
